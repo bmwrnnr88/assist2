@@ -6,7 +6,7 @@ import pdfkit
 import time
 
 # Initialize the OpenAI client with API key and Assistant ID from secrets.toml
-openai.api_key = "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"
+openai.api_key = "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"
 assistant_id = "asst_3ktVwIJaf0i8yBft8nhQH0Oj"
 client = openai
 
