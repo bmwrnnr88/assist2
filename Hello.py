@@ -85,8 +85,18 @@ if st.session_state.start_chat and st.session_state.thread_id:
     if message.run_id == run.id and message.role == "assistant"
 ]
 for message in assistant_messages_for_run:
-    # Extract the message content from the response structure
-    message_text = message.content.text.value  # Access the 'value' attribute
+    # Initialize an empty string to accumulate message text
+    message_text = ""
+
+    # Iterate over each item in the message.content list
+    for content_item in message.content:
+        if hasattr(content_item, 'text') and hasattr(content_item.text, 'value'):
+            message_text += content_item.text.value + " "  # Append the text value
+
+    # Trim any trailing whitespace from the accumulated message text
+    message_text = message_text.strip()
+
+    # Add the processed message to the state and display it
     st.session_state.messages.append({"role": "assistant", "content": message_text})
     with st.chat_message("assistant"):
         st.markdown(message_text, unsafe_allow_html=True)
