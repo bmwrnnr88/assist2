@@ -4,3 +4,6 @@ pandas
 pydeck
 streamlit
 openai
+requests
+beautifulsoup4
+pdfkit
