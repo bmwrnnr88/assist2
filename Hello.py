@@ -100,6 +100,6 @@ for message in assistant_messages_for_run:
     st.session_state.messages.append({"role": "assistant", "content": message_text})
     with st.chat_message("assistant"):
         st.markdown(message_text, unsafe_allow_html=True)
-else:
+#else:
     # Prompt to start the chat
-    st.write("Click 'Start Chat' to begin the conversation.")
+    #st.write("Click 'Start Chat' to begin the conversation.")
