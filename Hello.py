@@ -21,13 +21,6 @@ if "thread_id" not in st.session_state:
 # Set up the Streamlit page with a title and icon
 st.set_page_config(page_title="ChatGPT-like Chat App", page_icon=":speech_balloon:")
 
-# Define functions for scraping, converting text to PDF
-#def scrape_website(url):
-    # [Function code remains the same]
-
-#def text_to_pdf(text, filename):
-    # [Function code remains the same]
-
 # Main chat interface setup
 st.title("OpenAI Assistants API Chat")
 st.write("This is a simple chat application that uses OpenAI's API to generate responses.")
@@ -36,12 +29,12 @@ st.write("This is a simple chat application that uses OpenAI's API to generate r
 if st.button("Start Chat"):
     st.session_state.start_chat = True
     # Initialize a thread for the chat session if it hasn't been done yet
-    if "thread_id" not in st.session_state:
+    if "thread_id" not in st.session_state or st.session_state.thread_id is None:
         thread = client.beta.threads.create()
         st.session_state.thread_id = thread.id
 
-# Only show the chat interface if the chat has been started
-if st.session_state.start_chat:
+# Only show the chat interface if the chat has been started and a valid thread ID exists
+if st.session_state.start_chat and st.session_state.thread_id:
     if "openai_model" not in st.session_state:
         st.session_state.openai_model = "gpt-4-1106-preview"
     if "messages" not in st.session_state:
@@ -70,7 +63,7 @@ if st.session_state.start_chat:
         run = client.beta.threads.runs.create(
             thread_id=st.session_state.thread_id,
             assistant_id=assistant_id,
-            instructions="Please answer the queries using the knowledge provided in the files.When adding other information mark it clearly as such.with a different color"
+            instructions="Please answer the queries using the knowledge provided in the files. When adding other information mark it clearly as such."
         )
 
         # Poll for the run to complete and retrieve the assistant's messages
@@ -92,6 +85,7 @@ if st.session_state.start_chat:
             if message.run_id == run.id and message.role == "assistant"
         ]
         for message in assistant_messages_for_run:
+            # Process the message (assuming you have a function for this)
             full_response = process_message_with_citations(message)
             st.session_state.messages.append({"role": "assistant", "content": full_response})
             with st.chat_message("assistant"):
@@ -99,7 +93,3 @@ if st.session_state.start_chat:
 else:
     # Prompt to start the chat
     st.write("Click 'Start Chat' to begin the conversation.")
-
-# [Rest of your code for processing messages and handling chat interactions]
-
-# Note: Ensure any code related to the sidebar or file upload is removed
