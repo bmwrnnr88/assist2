@@ -6,8 +6,9 @@ import pdfkit
 import time
 
 # Initialize the OpenAI client with API key and Assistant ID from secrets.toml
-openai.api_key = "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"
-assistant_id = "asst_3ktVwIJaf0i8yBft8nhQH0Oj"
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+assistant_id = st.secrets["ASSISTANT_ID"]
+
 client = openai
 
 # Initialize session state variables for chat control
