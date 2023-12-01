@@ -31,6 +31,14 @@ st.set_page_config(page_title="ChatGPT-like Chat App", page_icon=":speech_balloo
 st.title("OpenAI Assistants API Chat")
 st.write("This is a simple chat application that uses OpenAI's API to generate responses.")
 
+# Button to start the chat session
+if st.button("Start Chat"):
+    st.session_state.start_chat = True
+    # Initialize a thread for the chat session if it hasn't been done yet
+    if "thread_id" not in st.session_state:
+        thread = client.beta.threads.create()
+        st.session_state.thread_id = thread.id
+
 # Only show the chat interface if the chat has been started
 if st.session_state.start_chat:
     if "openai_model" not in st.session_state:
@@ -90,10 +98,6 @@ if st.session_state.start_chat:
 else:
     # Prompt to start the chat
     st.write("Click 'Start Chat' to begin the conversation.")
-
-# Button to start the chat session
-if st.button("Start Chat"):
-    # [Start chat code remains the same]
 
 # [Rest of your code for processing messages and handling chat interactions]
 
