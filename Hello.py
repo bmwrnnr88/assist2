@@ -33,7 +33,60 @@ st.write("This is a simple chat application that uses OpenAI's API to generate r
 
 # Only show the chat interface if the chat has been started
 if st.session_state.start_chat:
-    # [Chat interface code remains the same]
+    if "openai_model" not in st.session_state:
+        st.session_state.openai_model = "gpt-4-1106-preview"
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    # Display existing messages in the chat
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    # Chat input for the user
+    if prompt := st.chat_input("What is up?"):
+        # Add user message to the state and display it
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        # Add the user's message to the existing thread
+        client.beta.threads.messages.create(
+            thread_id=st.session_state.thread_id,
+            role="user",
+            content=prompt
+        )
+
+        # Create a run with additional instructions
+        run = client.beta.threads.runs.create(
+            thread_id=st.session_state.thread_id,
+            assistant_id=assistant_id,
+            instructions="Please answer the queries using the knowledge provided in the files.When adding other information mark it clearly as such.with a different color"
+        )
+
+        # Poll for the run to complete and retrieve the assistant's messages
+        while run.status != 'completed':
+            time.sleep(1)
+            run = client.beta.threads.runs.retrieve(
+                thread_id=st.session_state.thread_id,
+                run_id=run.id
+            )
+
+        # Retrieve messages added by the assistant
+        messages = client.beta.threads.messages.list(
+            thread_id=st.session_state.thread_id
+        )
+
+        # Process and display assistant messages
+        assistant_messages_for_run = [
+            message for message in messages 
+            if message.run_id == run.id and message.role == "assistant"
+        ]
+        for message in assistant_messages_for_run:
+            full_response = process_message_with_citations(message)
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            with st.chat_message("assistant"):
+                st.markdown(full_response, unsafe_allow_html=True)
 else:
     # Prompt to start the chat
     st.write("Click 'Start Chat' to begin the conversation.")
