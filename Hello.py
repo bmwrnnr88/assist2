@@ -86,7 +86,7 @@ if st.session_state.start_chat and st.session_state.thread_id:
         ]
         for message in assistant_messages_for_run:
             # Process the message (assuming you have a function for this)
-            full_response = process_message_with_citations(message)
+            full_response = message["content"]  # or any other way you want to process the message
             st.session_state.messages.append({"role": "assistant", "content": full_response})
             with st.chat_message("assistant"):
                 st.markdown(full_response, unsafe_allow_html=True)
