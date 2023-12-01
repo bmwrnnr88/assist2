@@ -81,15 +81,15 @@ if st.session_state.start_chat and st.session_state.thread_id:
 
         # Process and display assistant messages
         assistant_messages_for_run = [
-            message for message in messages 
-            if message.run_id == run.id and message.role == "assistant"
-        ]
-        for message in assistant_messages_for_run:
-            # Directly access the message content
-            full_response = message.content
-            st.session_state.messages.append({"role": "assistant", "content": full_response})
-            with st.chat_message("assistant"):
-                st.markdown(full_response, unsafe_allow_html=True)
+    message for message in messages 
+    if message.run_id == run.id and message.role == "assistant"
+]
+for message in assistant_messages_for_run:
+    # Extract the message content from the response structure
+    message_text = message.content.text.value  # Access the 'value' attribute
+    st.session_state.messages.append({"role": "assistant", "content": message_text})
+    with st.chat_message("assistant"):
+        st.markdown(message_text, unsafe_allow_html=True)
 else:
     # Prompt to start the chat
     st.write("Click 'Start Chat' to begin the conversation.")
