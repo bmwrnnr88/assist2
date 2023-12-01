@@ -1,51 +1,47 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
+import openai
 import streamlit as st
-from streamlit.logger import get_logger
+from bs4 import BeautifulSoup
+import requests
+import pdfkit
+import time
 
-LOGGER = get_logger(__name__)
+# Initialize the OpenAI client with API key and Assistant ID from secrets.toml
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+assistant_id = st.secrets["ASSISTANT_ID"]
+client = openai
 
+# Initialize session state variables for chat control
+if "start_chat" not in st.session_state:
+    st.session_state.start_chat = False
 
-def run():
-    st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
-    )
+if "thread_id" not in st.session_state:
+    st.session_state.thread_id = None
 
-    st.write("# Welcome to Streamlit! 👋")
+# Set up the Streamlit page with a title and icon
+st.set_page_config(page_title="ChatGPT-like Chat App", page_icon=":speech_balloon:")
 
-    st.sidebar.success("Select a demo above.")
+# Define functions for scraping, converting text to PDF
+#def scrape_website(url):
+    # [Function code remains the same]
 
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
+#def text_to_pdf(text, filename):
+    # [Function code remains the same]
 
+# Main chat interface setup
+st.title("OpenAI Assistants API Chat")
+st.write("This is a simple chat application that uses OpenAI's API to generate responses.")
 
-if __name__ == "__main__":
-    run()
+# Only show the chat interface if the chat has been started
+if st.session_state.start_chat:
+    # [Chat interface code remains the same]
+else:
+    # Prompt to start the chat
+    st.write("Click 'Start Chat' to begin the conversation.")
+
+# Button to start the chat session
+if st.button("Start Chat"):
+    # [Start chat code remains the same]
+
+# [Rest of your code for processing messages and handling chat interactions]
+
+# Note: Ensure any code related to the sidebar or file upload is removed
