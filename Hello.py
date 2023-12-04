@@ -1,4 +1,4 @@
-import openai
+eimport openai
 import streamlit as st
 from bs4 import BeautifulSoup
 import requests
@@ -44,7 +44,7 @@ def main():
         # Step 2: Create a Thread
         st.session_state.thread = st.session_state.client.beta.threads.create()
 
-    user_query = st.text_input("Enter your query:", "I'm ready to begin the assessment")
+    user_query = st.text_input("Enter your query:", "Welcome! What is your name, first and last, and the period you have the wonderful Mr. Ward!")
 
     if st.button('Submit'):
         # Step 3: Add a Message to a Thread
@@ -83,9 +83,9 @@ def main():
                     content = msg.content[0].text.value
                     st.write(f"{role.capitalize()}: {content}")
                 break
-            else:
-                st.write("Waiting for the Assistant to process...")
-                time.sleep(5)
+            #else:
+                #st.write("Waiting for the Assistant to process...")
+                #time.sleep(5)
 
 if __name__ == "__main__":
     main()
